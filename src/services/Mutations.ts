@@ -18,7 +18,18 @@ const useLoginMutation = () => {
   });
 }
 
+const useLogoutMutation = () => {
+
+  return useMutation({
+    mutationFn: (email: object) => Api.logout(email),
+
+    onSuccess: (data) => {
+      console.log(data);
+    }
+  });
+}
 
 export const Mutations = {
-  useLoginMutation
+  useLoginMutation,
+  useLogoutMutation
 }

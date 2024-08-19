@@ -10,14 +10,20 @@ function App() {
 
   const { refetch: retomar } = Queries.useFetchLessees();
 
+  const { mutate: deslogar } = Mutations.useLogoutMutation();
+
   const handleFetchLessors = async () => {
     const result = await refetch();
     console.log(result.data);
   };
-  
+
   const handleFetchLessees = async () => {
     const result = await retomar();
     console.log(result.data);
+  };
+
+  const handleLogout = () => {
+    deslogar({ email: "fernandodias@gmail.com" });
   };
 
   React.useEffect(() => {
@@ -35,6 +41,7 @@ function App() {
 
         <button onClick={handleFetchLessors}>Atualizar Lessors</button>
         <button onClick={handleFetchLessees}>Atualizar Lessees</button>
+        <button onClick={handleLogout}>Deslogar</button>
       </p>
     )
   }

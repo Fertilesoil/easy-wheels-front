@@ -56,6 +56,10 @@ const login = async (data: UserLoginDto) => {
   return (await connection.post('Auth/login', data)).data
 }
 
+const logout = async (email: object) => {
+  return (await connection.post('Auth/logout', email)).data
+}
+
 const refreshToken = async () => {
   return (await interceptor.get<SuccessDto>('Auth/refresh-token')).data
 }
@@ -112,5 +116,6 @@ export const Api = {
   login,
   allLessors,
   allLessees,
+  logout
   // refreshToken
 }
