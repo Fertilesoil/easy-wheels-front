@@ -1,10 +1,9 @@
 
-import React from 'react';
 import { Mutations } from './services/Mutations'
 import { Queries } from './services/Queries';
 
 function App() {
-  const { isPending, isSuccess, mutate } = Mutations.useLoginMutation();
+  const { isSuccess, mutate } = Mutations.useLoginMutation();
   const { refetch } = Queries.useFetchLessors();
 
   const { refetch: retomar } = Queries.useFetchLessees();
@@ -28,11 +27,7 @@ function App() {
   const handleLogin = () => {
     mutate({ email: 'fernandodias@gmail.com', password: 'Senhasegura123!' });
   };
-
-  // if (isPending) {
-  //   return <p>Loading data ...</p>
-  // }
-
+  
   return (
     <>
       <p>Data fetched</p>
