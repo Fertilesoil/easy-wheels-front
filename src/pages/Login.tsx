@@ -37,7 +37,7 @@ const Login = () => {
   React.useEffect(() => {
     const refreshToken = JSON.parse(localStorage.getItem('refresh_token')!);
 
-    if (refreshToken !== undefined) {
+    if (refreshToken !== null) {
       mutate({ Token: refreshToken.Token.split(" ")[1], Email: refreshToken.Email });
 
       if (isSuccess) {
