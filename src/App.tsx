@@ -1,6 +1,5 @@
 
 import React from 'react';
-import './App.css'
 import { Mutations } from './services/Mutations'
 import { Queries } from './services/Queries';
 
@@ -26,25 +25,29 @@ function App() {
     deslogar({ email: "fernandodias@gmail.com" });
   };
 
-  React.useEffect(() => {
+  const handleLogin = () => {
     mutate({ email: 'fernandodias@gmail.com', password: 'Senhasegura123!' });
-  }, []);
+  };
 
-  if (isPending) {
-    return <p>Loading data ...</p>
-  }
+  // if (isPending) {
+  //   return <p>Loading data ...</p>
+  // }
 
-  if (isSuccess) {
-    return (
-      <p>
-        Data fetched
+  return (
+    <>
+      <p>Data fetched</p>
+      <button onClick={handleFetchLessors}>Atualizar Lessors</button>
+      <button onClick={handleFetchLessees}>Atualizar Lessees</button>
+      <button onClick={handleLogout}>Deslogar</button>
+      <button onClick={handleLogin}>Logar</button>
 
-        <button onClick={handleFetchLessors}>Atualizar Lessors</button>
-        <button onClick={handleFetchLessees}>Atualizar Lessees</button>
-        <button onClick={handleLogout}>Deslogar</button>
-      </p>
-    )
-  }
+      {
+        isSuccess && <div>
+          <p>Usuário logado</p>
+        </div>
+      }
+    </>
+  )
 }
 
 export default App

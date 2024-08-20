@@ -2,11 +2,15 @@ import { create } from "zustand"
 
 
 type UserState = {
-  email: string,
-  setEmail: (email: string) => void
+  userStatus: { email: string, isLogged: boolean };
+  setUserStatus: (email: string, isLogged: boolean) => void;
+  login: (email: string) => void;
+  logout: () => void;
 }
 
 export const useUserStore = create<UserState>((set) => ({
-  email: "",
-  setEmail: (email) => set({ email })
+  userStatus: { email: '', isLogged: false },
+  setUserStatus: (email, isLogged) => set({ userStatus: { email, isLogged } }),
+  login: (email) => set({ userStatus: { email, isLogged: true } }),
+  logout: () => set({ userStatus: { email: '', isLogged: false } })
 }));

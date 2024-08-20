@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SuccessDto, UserLoginDto } from '../types/Types';
+import type { TokenDto, UserLoginDto } from '@/types/Types';
 
 export const configuration = {
   baseURL: import.meta.env.VITE_BASE_URL_PROD,
@@ -11,45 +11,6 @@ export const connection = axios.create(configuration);
 
 const interceptor = axios.create(configuration);
 
-connection.interceptors.request.use(async config => {
-  if (config.url !== 'Auth/login') {
-    const newToken = await refreshToken();
-    config.headers.Authorization = newToken.AccessToken;
-  }
-  return config;
-}, err => Promise.reject(err));
-
-// connection.interceptors.response.use((response) => response, async (error) => {
-//   const originalRequest = error.config;
-
-//   if (error.response.status === 401 && !originalRequest._retry) {
-//     originalRequest._retry = true;
-
-//     try {
-//       const email = useUserStore.getState().email;
-//       const token: SuccessDto = await refreshToken(email);
-//       axios.defaults.headers.common['Authorization'] = token.AccessToken;
-//       originalRequest.headers['Authorization'] = token.AccessToken;
-//       console.log("Interceptador acionado");
-//       return axios(originalRequest);
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   }
-// });
-
-// connection.interceptors.request.use(async (config) => {
-//   try {
-//     const email = useUserStore.getState().email;
-//     const token: SuccessDto = await refreshToken(email);
-//     config.headers.Authorization = token.AccessToken;
-
-//   } catch (error) {
-//     console.log(`Erro: ${error}`);
-//   }
-//   return config;
-// })
-
 // Auth methods
 
 const login = async (data: UserLoginDto) => {
@@ -60,8 +21,12 @@ const logout = async (email: object) => {
   return (await connection.post('Auth/logout', email)).data
 }
 
-const refreshToken = async () => {
-  return (await interceptor.get<SuccessDto>('Auth/refresh-token')).data
+const refreshTokenCall = async (refreshToken: object) => {
+  return (await interceptor.post<TokenDto>('Auth/refresh-token', refreshToken)).data
+}
+
+const refreshToken = async (refreshToken: object) => {
+  return (await interceptor.post<TokenDto>('Auth/refresh-token', refreshToken)).data
 }
 
 // Lessor methods
@@ -78,44 +43,37 @@ const allLessees = async () => {
 
 // Interceptor
 
-// connection.interceptors.response.use(
-//   (response) => response,
-//   async (error) => {
-//     const originalRequest = error.config;
+connection.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
 
-//     if (error.response.status === 401 && !originalRequest._retry) {
-//       originalRequest._retry = true;
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
 
-//       try {
-//         // Chame o endpoint /refresh-token para obter um novo token
-//         const response = await refreshToken();
+      try {
+        const refreshToken = JSON.parse(localStorage.getItem("refresh_token")!);
+        const data = await refreshTokenCall({ Token: refreshToken.Token.split(" ")[1] });
 
-//         // Extrair o novo AccessToken do response
-//         const newAccessToken = response.AccessToken;
+        const newAccessToken = data.Token;
 
-//         // Atualize o cabeçalho Authorization com o novo token
-//         connection.defaults.headers.common['Authorization'] = newAccessToken;
-//         originalRequest.headers['Authorization'] = newAccessToken;
+        connection.defaults.headers.common.Authorization = newAccessToken;
+        originalRequest.headers['Authorization'] = newAccessToken;
 
-//         console.log("Interceptador acionado");
-
-//         // Refaz a requisição original com o novo token
-//         return connection(originalRequest);
-//       } catch (error) {
-//         // Se houver erro ao tentar atualizar o token, apenas logue o erro e rejeite a promessa
-//         console.error('Erro ao atualizar o token:', error);
-//         return Promise.reject(error);
-//       }
-//     }
-//     // Se o erro não for 401 ou a tentativa já foi feita, rejeite o erro normalmente
-//     return Promise.reject(error);
-//   }
-// );
+        return connection(originalRequest);
+      } catch (error) {
+        console.error('Erro ao atualizar o token:', error);
+        return Promise.reject(error);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 export const Api = {
   login,
   allLessors,
   allLessees,
-  logout
-  // refreshToken
+  logout,
+  refreshToken
 }
