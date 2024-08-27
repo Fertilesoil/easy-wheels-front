@@ -6,6 +6,7 @@ export type EmailDto = {
 export type TokenDto = {
   Token: string;
   Email: string;
+  UserType: string;
 }
 
 export type UserLoginDto = {
@@ -16,4 +17,5 @@ export type UserLoginDto = {
 export type UserLoginSuccessDto = {
   AccessToken: string;
   RefreshToken: string;
+  UserType: string;
 }

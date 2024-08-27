@@ -1,5 +1,7 @@
 import axios from "axios";
 import type { TokenDto, UserLoginDto } from '@/types/Types';
+import { Lessee } from "@/models/Lessee";
+import { Lessor } from "@/models/Lessor";
 
 export const configuration = {
   baseURL: import.meta.env.VITE_BASE_URL_PROD,
@@ -32,13 +34,21 @@ const refreshToken = async (refreshToken: object) => {
 // Lessor methods
 
 const allLessors = async () => {
-  return (await connection.get('Lessor')).data
+  return (await connection.get<Partial<Lessor>[]>('Lessor')).data
+}
+
+const individualLessor = async (email: string) => {
+  return (await connection.post<Lessor>('Lessor/email', email)).data
 }
 
 // Lessee methods
 
 const allLessees = async () => {
   return (await connection.get('Lessee')).data
+}
+
+const individualLessee = async (email: string) => {
+  return (await connection.post<Lessee>('Lessee/email', email)).data
 }
 
 // Interceptor
@@ -53,7 +63,7 @@ connection.interceptors.response.use(
 
       try {
         const refreshToken = JSON.parse(localStorage.getItem("refresh_token")!);
-        const data = await refreshTokenCall({ Token: refreshToken.Token.split(" ")[1] });
+        const data = await refreshTokenCall({ Token: refreshToken.Token.split(" ")[1], Email: refreshToken.Email });
 
         const newAccessToken = data.Token;
 
@@ -75,5 +85,7 @@ export const Api = {
   allLessors,
   allLessees,
   logout,
-  refreshToken
+  refreshToken,
+  individualLessor,
+  individualLessee
 }

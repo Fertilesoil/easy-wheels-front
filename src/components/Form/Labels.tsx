@@ -6,5 +6,6 @@ export const FormLabel = styled.label`
   gap: 2rem;
   align-items: center;
   font-size: 1.3rem;
-  font-weight: 500;
+  font-weight: 600;
+  font-family: var(--font-lara); 
 `

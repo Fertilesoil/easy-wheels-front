@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 import styled from "styled-components";
 
 export const FormWrapper = styled.main`
-  background-color: #e2be8b63;
+  /* background-color: #e2be8b63; */
   height: 100dvh;
   width: 100dvw;
   color: black;
@@ -18,7 +18,7 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   border-radius: .5rem;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, .2);
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, .2);
 `;
 
 const ContentWrapper = styled.div`
@@ -32,9 +32,11 @@ const ContentWrapper = styled.div`
 `;
 
 const Header = styled.header`
-  margin-top: 4rem;
+  margin-top: 2rem;
   text-align: center;
-  font-size: 2.5rem;
+  font-size: 4.5rem;
+  font-family: var(--font-cursive);
+  font-weight: 700;
 `;
 
 type FormLogin = {

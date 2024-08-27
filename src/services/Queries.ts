@@ -20,7 +20,27 @@ const useFetchLessees = () => {
   });
 }
 
+// const useFetchIndividualLessor = (id: string) => {
+//   return useQuery({
+//     queryKey: ['lessors', id], 
+//     queryFn: () => Api.individualLessor(id),
+//     enabled: false,
+//     retry: false
+//   });
+// }
+
+// const useFetchIndividualLessee = (id: string) => {
+//   return useQuery({
+//     queryKey: ['lessees', id], 
+//     queryFn: () => Api.individualLessee(id),
+//     enabled: false,
+//     retry: false
+//   });
+// }
+
 export const Queries = {
   useFetchLessors,
-  useFetchLessees
+  useFetchLessees,
+  // useFetchIndividualLessor,
+  // useFetchIndividualLessee
 }
